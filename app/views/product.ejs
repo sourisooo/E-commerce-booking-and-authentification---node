@@ -20,10 +20,11 @@
 
         <p><%= prod.dataValues.description %></p>
 
-        <form action="/cart/<%= prod.dataValues.id %>" method="POST">
+        <form action="/product/<%= prod.dataValues.id %>" method="POST">
             <input class="button" value="Ajouter au panier" type="submit">
         </form>
     </div>
 </div>
 
 <%- include ('partials/foot') %>
+
