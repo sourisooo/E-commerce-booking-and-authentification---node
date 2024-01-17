@@ -27,6 +27,8 @@ router.post('/product/:id' ,catalogController.addcart);
 
 router.post('/cart/remove/:id' ,catalogController.remove);
 
+router.post('/cart/destroy', catalogController.destroy)
+
 // Affichage page formulaire de login
 router.get('/login', sessionController.index);
 //!! Démarre une session user si user existe, vous travaillez dans ce controller
