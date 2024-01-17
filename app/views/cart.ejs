@@ -13,7 +13,12 @@
           <h2>
             <% if(locals.cart?.length  > 0) { %>
                  <%= locals.cart.length %> items in Shopping Cart
-                 <a href="/cart/destroy" class="button">Vider le panier</a>
+
+                       <form action="/cart/destroy" method="POST">
+                  <input class="button" value="Vider le panier" type="submit">
+              </form>
+
+
             <% } else { %>
                     Vous n'avez rien ajouté au panier
             <% }  %>
