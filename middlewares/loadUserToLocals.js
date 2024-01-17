@@ -6,6 +6,13 @@ const loadUserToLocals = (req, res, next) => {
     res.locals.user = null;
   }
 
+  if (req.session.cart) {
+    res.locals.cart = req.session.cart;
+  } else {
+    res.locals.cart = null;
+  }
+
+
   next();
 };
 
