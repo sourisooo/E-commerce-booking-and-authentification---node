@@ -25,7 +25,7 @@ router.get('/product/:id', catalogController.product);
 
 router.post('/product/:id' ,catalogController.addcart);
 
-router.post('/cart/remove/:id' ,cartController.remove);
+router.post('/cart/remove/:id' ,catalogController.remove);
 
 // Affichage page formulaire de login
 router.get('/login', sessionController.index);
