@@ -145,6 +145,16 @@ const catalogController = {
 
         res.redirect('/cart');
     },
+
+     destroy: (req, res) => {
+        req.session.cart = {};
+        req.session.cart['products'] = [];
+        res.locals.cart = req.session.cart;
+
+        res.redirect('/shop');
+    },
+
+    
 };
 
 module.exports = catalogController;
