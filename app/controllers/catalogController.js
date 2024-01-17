@@ -1,4 +1,9 @@
+
 const { Category, Product } = require('../models');
+
+
+
+let products = [];
 
 const catalogController = {
     index: async (req, res) => {
@@ -90,6 +95,37 @@ const catalogController = {
     cart: (req, res) => {
         res.render('cart');
     },
+
+    addcart: async (req, res) => {
+
+        const {id} = req.params;
+
+        const prod = await Product.findByPk(id, {
+
+            include: [{
+
+                association: 'categories',
+
+
+            }]
+
+    
+        }); 
+        
+        // console.log(prod.dataValues);
+
+        products.push(prod.dataValues);
+
+        // console.log(products);
+
+        req.session.cart = products;
+
+        // console.log( req.session.cart);
+        
+        res.redirect('/cart');
+
+
+    }
 };
 
 module.exports = catalogController;
