@@ -6,12 +6,21 @@ const cartController = {
     },
 
     addOrUpdate: async (req, res) => {
+
+        console.log('testadd');
+
+        console.log(req.session);
+
         const productId = parseInt(req.params.productId);
 
-        const productsInCart = req.session.cart.products;
+
+
+        const productsInCart = req.session.cart;
         const productToAdd = await Product.findOne({
             where: { id: productId },
         });
+
+        console.log(req.session);
 
         // Si on a déjà le produit dans le panier , on met à jour la quantité, sinon on ajoute le produit au panier
         const found = productsInCart.find(
@@ -32,14 +41,22 @@ const cartController = {
     },
 
     remove: (req, res) => {
-        const productId = parseInt(req.params.productId);
 
-        const productsInCart = req.session.cart.products;
+        const {id} = req.params;
+
+        // const productId = parseInt(req.params.productId);
+
+    
+        const productsInCart = req.session.cart;
         const newProducts = productsInCart.filter(
-            prod => prod.id !== productId
+            prod => prod.id != id
         );
 
-        req.session.cart.products = newProducts;
+        console.log(newProducts);
+
+        console.log(req.session.cart);
+
+        req.session.cart = newProducts;
 
         res.redirect('/cart');
     },
