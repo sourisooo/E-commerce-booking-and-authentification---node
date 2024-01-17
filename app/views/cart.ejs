@@ -11,16 +11,16 @@
       <div class="cart-section container">
         <div>
           <h2>
-            <% if(locals.cart?.products.length  > 0) { %>
-                 <%= cartCount %> items in Shopping Cart
+            <% if(locals.cart?.length  > 0) { %>
+                 <%= locals.cart.length %> items in Shopping Cart
                  <a href="/cart/destroy" class="button">Vider le panier</a>
             <% } else { %>
                     Vous n'avez rien ajouté au panier
             <% }  %>
           </h2>
           <div class="cart-table">
-              <% if (locals.cart?.products.length > 0) { %>
-               <% for( let product of cart.products ) { %>
+              <% if (locals.cart?.length > 0) { %>
+               <% for( let product of cart ) { %>
                     <div class="cart-table-row">
                     <div class="cart-table-row-left">
                       <a href="/">
@@ -43,11 +43,11 @@
                     </div>
                     <div class="cart-table-row-right">
                       <div class="cart-table-actions">
-                        <a
-                          href="/cart/remove/<%= product.id %> "
-                        >
-                          Remove
-                        </a>
+
+                        <form action="/cart/remove/<%= product.id %>" method="POST">
+                          <input class="button" value="Remove" type="submit">
+                      </form>
+
                       </div>
                       <div>
                         <select
@@ -85,29 +85,7 @@
             </form>
           </div>
 
-          <% if(locals.cart?.products.length  > 0) { %>
 
-            <div class="cart-totals">
-              <div class="cart-totals-left">
-                placeholder pour une fontionnalité
-              </div>
-
-              <div class="cart-totals-right">
-                <div>
-                  Subtotal <br />
-                  Tax <br />
-                  <span class="cart-totals-total">Total</span>
-                </div>
-                <div class="cart-totals-subtotal">
-                <%= totalHT / 100 %>  &euro;
-                  <br />
-                  <%= (totalTTC - totalHT / 100 ).toFixed(2) %> &euro;
-                  <br />
-                  <span class="cart-totals-total"><%= totalTTC%> &euro;</span>
-                </div>
-              </div>
-            </div>
-          <% } %>
 
           <div class="cart-buttons">
             <a href="/shop" class="button">
