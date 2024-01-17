@@ -125,7 +125,26 @@ const catalogController = {
         res.redirect('/cart');
 
 
-    }
+    },   remove: (req, res) => {
+
+        const {id} = req.params;
+
+        // const productId = parseInt(req.params.productId);
+
+    
+        const productsInCart = req.session.cart;
+        const newProducts = productsInCart.filter(
+            prod => prod.id != id
+        );
+
+        console.log(newProducts);
+
+        console.log(req.session.cart);
+
+        req.session.cart = newProducts;
+
+        res.redirect('/cart');
+    },
 };
 
 module.exports = catalogController;
