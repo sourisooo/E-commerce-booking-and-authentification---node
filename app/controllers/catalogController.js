@@ -158,4 +158,4 @@ const catalogController = {
     
 };
 
-module.exports = catalogController;
+module.exports = catalogController, products;
