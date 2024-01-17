@@ -8,6 +8,8 @@ const adminController = require('./controllers/adminController');
 
 const auth = require('../middlewares/auth');
 const isAdmin = require('../middlewares/isAdmin');
+const cartController = require('./controllers/cartController');
+
 
 // Page d'accueil
 router.get('/', catalogController.index);
@@ -20,6 +22,10 @@ router.get('/category/:id', catalogController.category);
 
 // Page de détail d'un produit
 router.get('/product/:id', catalogController.product);
+
+router.post('/product/:id' ,catalogController.addcart);
+
+router.post('/cart/remove/:id' ,cartController.remove);
 
 // Affichage page formulaire de login
 router.get('/login', sessionController.index);
@@ -38,5 +44,7 @@ router.post('/register', userController.register);
 router.get('/profile', auth, userController.show);
 // admin avec chained middlewares
 router.get('/dashboard', [auth, isAdmin], adminController.index);
+
+router.get('/cart', cartController.index);
 
 module.exports = router;
