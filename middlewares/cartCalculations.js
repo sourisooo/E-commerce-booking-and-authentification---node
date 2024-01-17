@@ -4,14 +4,14 @@ const cartCalculations = (req, res, next) => {
     //
     req.app.locals.cartCount = 0;
     //calcul des totaux
-    if (req.session.cart.products.length > 0) {
+    if (req.session.cart.length > 0) {
         // Des bons cas d'utilisation de reduce
-        const totalHT = req.session.cart.products.reduce(
+        const totalHT = req.session.cart.reduce(
             (acc, prod) => (acc += prod.priceHT * prod.qty),
             0
         );
 
-        req.app.locals.cartCount = req.session.cart.products.reduce(
+        req.app.locals.cartCount = req.session.cart.reduce(
             (acc, prod) => (acc += prod.qty),
             0
         );
@@ -27,3 +27,4 @@ const cartCalculations = (req, res, next) => {
 };
 
 module.exports = cartCalculations;
+
