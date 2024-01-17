@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const { User, Role } = require('../models');
+let  {products}  = require('./catalogController');
 
 const sessionController = {
     index: (req, res) => {
@@ -72,6 +73,8 @@ const sessionController = {
         // !! Votre code ici
 
         req.session.destroy();
+
+        products = [];
 
         res.redirect('/');
     },
