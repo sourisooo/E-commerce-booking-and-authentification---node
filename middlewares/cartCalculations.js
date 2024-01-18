@@ -27,4 +27,3 @@ const cartCalculations = (req, res, next) => {
 };
 
 module.exports = cartCalculations;
-
