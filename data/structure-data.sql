@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS "categories", "products", "roles", "users";
+DROP TABLE IF EXISTS "categories", "products", "roles", "users", "sessions";
 
 CREATE TABLE "categories" (
     "id"         INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -29,12 +29,21 @@ CREATE TABLE "roles" (
 CREATE TABLE "users" (
     "id"         INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "name"       TEXT,
-    "email"      TEXT NOT NULL,
+    "email"      TEXT NOT NULL UNIQUE ,
     "password"   TEXT NOT NULL,
     "role_id"    INTEGER REFERENCES roles("id"),
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     "updated_at" TIMESTAMPTZ
 );
+
+CREATE TABLE "sessions" (
+    "id"        INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    "panier"    TEXT,
+    "user_id"   INTEGER REFERENCES users("id"),
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    "updated_at" TIMESTAMPTZ
+);
+
 
 -- Data for Name: categories; 
 INSERT INTO "categories" ("name")
@@ -57,3 +66,5 @@ VALUES ('customer'),
 INSERT INTO "users" ("name", "email", "password", "role_id")
 VALUES ('John Example', 'example@example.com', '$2b$10$nIIIGWlkm3SzwVF81h4qOekR8ABLUqXoiWAVSkB6oNpKroyyky84G', 1), 
 ('Maurice Admin', 'admin@admin.com', '$2b$10$nIIIGWlkm3SzwVF81h4qOekR8ABLUqXoiWAVSkB6oNpKroyyky84G', 2);
+
+
