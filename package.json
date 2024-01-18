@@ -19,6 +19,7 @@
     "homepage": "https://github.com/O-clock-FS-JS/refonte-parcours-S05#readme",
     "dependencies": {
         "bcrypt": "^5.1.0",
+        "connect-pg-simple": "^9.0.1",
         "dotenv": "^16.0.3",
         "ejs": "^3.1.9",
         "email-validator": "^2.0.4",
@@ -31,31 +32,31 @@
         "nodemon": "^2.0.21"
     },
     "prettier": {
-    "printWidth": 80,
-    "tabWidth": 4,
-    "singleQuote": true,
-    "trailingComma": "es5",
-    "bracketSpacing": true,
-    "jsxBracketSameLine": false,
-    "overrides": [
-      {
-        "files": "*.js",
-        "options": {
-          "parser": "babel"
-        }
-      },
-      {
-        "files": "*.json",
-        "options": {
-          "parser": "json"
-        }
-      }
-    ],
-    "semi": true,
-    "requirePragma": false,
-    "proseWrap": "preserve",
-    "arrowParens": "avoid",
-    "htmlWhitespaceSensitivity": "css",
-    "quoteProps": "as-needed"
-  }
+        "printWidth": 80,
+        "tabWidth": 4,
+        "singleQuote": true,
+        "trailingComma": "es5",
+        "bracketSpacing": true,
+        "jsxBracketSameLine": false,
+        "overrides": [
+            {
+                "files": "*.js",
+                "options": {
+                    "parser": "babel"
+                }
+            },
+            {
+                "files": "*.json",
+                "options": {
+                    "parser": "json"
+                }
+            }
+        ],
+        "semi": true,
+        "requirePragma": false,
+        "proseWrap": "preserve",
+        "arrowParens": "avoid",
+        "htmlWhitespaceSensitivity": "css",
+        "quoteProps": "as-needed"
+    }
 }
