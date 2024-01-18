@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const validator = require('email-validator');
-const { User, Role } = require('../models');
+const { User, Role, Session } = require('../models');
 
 const userController = {
     index: (req, res) => {
@@ -77,6 +77,21 @@ const userController = {
                 email,
                 password: passwordHashed,
                 role_id: 1,
+              });
+
+              
+              const newuser = await User.findOne({
+                where: {
+                  email,
+                },
+              });
+
+              await Session.create({
+
+
+                user_id: newuser.id
+
+              
               });
 
 

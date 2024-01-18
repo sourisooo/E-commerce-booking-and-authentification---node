@@ -1,6 +1,6 @@
 
-const { Category, Product } = require('../models');
-
+const { where } = require('sequelize');
+const { Category, Product, Session, User } = require('../models');
 
 
 let products = [];
@@ -102,6 +102,8 @@ const catalogController = {
 
         const prod = await Product.findByPk(id, {
 
+            select: ['id'],
+
             include: [{
 
                 association: 'categories',
@@ -114,18 +116,84 @@ const catalogController = {
         
         // console.log(prod.dataValues);
 
-        products.push(prod.dataValues);
 
-        // console.log(products);
+        // console.log(typeof req.session.cart);
 
-        req.session.cart = products;
+        if ((products.lenght=1)&&(req.session.user)&&(req.session.cart != null)){
 
-        // console.log( req.session.cart);
+            req.session.cart.push(prod.dataValues);
+
+            products = req.session.cart
+
+        } else if((req.session.user)){
+ 
+            products.push(prod.dataValues);
+    
+            req.session.cart = products;
+    
+
+
+        } else if ((!req.session.user)&&(products != undefined)&&(req.session.cart == undefined)){
+
+
+            console.log(products);
+
+            console.log(req.session.cart);
+
+            products= [];
+
+            products.push(prod.dataValues);
+
+            req.session.cart = products;
+
+        } else if ((!req.session.user)){
+
+            products.push(prod.dataValues);
+
+            req.session.cart = products;
+
+        }
+
+
+        // console.log(req.session.cart);
+
+        const prodsession = await Product.findOne({
+            where: { id: id },
+            attributes: { exclude: ['category_id', 'ref', 'image', 'title', 'description', 'price', 'created_at', 'updated_at'], include: ['id'] },
+          }); 
+
+
+          if (req.session.user) {
+
+
+        const sessionupdate = await Session.findOne({where:{user_id: req.session.user.id}});
+
+        //   console.log(sessionupdate);
+
+          if (sessionupdate) {
+
+        let panierString = JSON.stringify(prodsession);
+
+        sessionupdate.panier=`${sessionupdate.panier}, ${panierString}`;
+
+        // console.log(sessionupdate.panier);
+
+        sessionupdate.save();} else {
+            
+            await Session.create({
+
+                panier: prodsession.dataValues.id,
+                user_id: req.session.user.id,
+            
+              }); 
         
+
+             };}
+
         res.redirect('/cart');
 
 
-    },   remove: (req, res) => {
+    },     remove: async (req, res) => {
 
         const {id} = req.params;
 
@@ -133,29 +201,68 @@ const catalogController = {
 
     
         const productsInCart = req.session.cart;
+
         const newProducts = productsInCart.filter(
             prod => prod.id != id
         );
 
-        console.log(newProducts);
+        // console.log(newProducts);
 
-        console.log(req.session.cart);
+        // console.log(req.session.cart);
+
+        products = newProducts;
 
         req.session.cart = newProducts;
 
-        res.redirect('/cart');
-    },
+        if (req.session.user) {
 
-        destroy: (req, res) => {
+        const sessionupdate = await Session.findOne({where:{user_id: req.session.user.id}});
+
+        let remove = `{"id":${id}}`;
+
+        if(sessionupdate.panier != null) {
+
+        let panierupdated = sessionupdate.panier.replaceAll(remove, '').replaceAll(' , ', '').replaceAll(',,', '').replaceAll('null,', '');
+
+        sessionupdate.panier = panierupdated;
+
+        sessionupdate.changed('panier', true);
+
+        sessionupdate.save();}}
+
+        // console.log(panierupdated);
+
+        // console.log(sessionupdate);
+
+
+        res.redirect('/cart');
+
+    },   destroy: async (req, res) => {
    
         req.session.cart = [];
         products = [];
         res.locals.cart = req.session.cart;
 
+        if (req.session.user){
+
+        const sessionupdate = await Session.findOne({where:{user_id: req.session.user.id}});
+
+        sessionupdate.panier = '';
+
+        console.log(sessionupdate.panier);
+
+        sessionupdate.changed('panier', true);
+
+         sessionupdate.save();
+        
+        }
+
         res.redirect('/cart');
     },
 
-    
+
+
+
 };
 
 module.exports = catalogController, products;

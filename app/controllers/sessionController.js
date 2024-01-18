@@ -1,6 +1,9 @@
 const bcrypt = require('bcrypt');
-const { User, Role } = require('../models');
+const { User, Role, UserSession, Session, Product } = require('../models');
 let  {products}  = require('./catalogController');
+const catalogController = require('./catalogController');
+
+
 
 const sessionController = {
     index: (req, res) => {
@@ -59,10 +62,80 @@ const sessionController = {
               req.session.user = user;
               req.session.user.password = '';
 
-            console.log(user)
-            
+             const session =  await Session.findOne({where:{user_id: req.session.user.id}});
 
-            res.redirect('/');
+             if((session != undefined)) {
+
+                console.log(session != undefined, session.panier != null, req.session.user);
+
+             const panierArray = Object.assign([], session.panier.replaceAll('id', '').replaceAll(',', '').replaceAll(' ', '').replaceAll(', ', '').replaceAll(' ,', '').replaceAll(':', '').replaceAll('{', '').replaceAll('}', '').replaceAll('"', '').replaceAll('null', ''));
+
+            //  console.log(panierArray);
+
+            //  console.log(req.session.cart);
+
+            if((req.session.cart)&&(session != undefined)){
+
+            products = req.session.cart;
+            // console.log(products);
+
+
+            const sessionupdate = await Session.findOne({where:{user_id: req.session.user.id}});
+
+                // console.log(sessionupdate);
+
+                for (prod of products) {
+
+          sessionupdate.panier=`${sessionupdate.panier}, {"id":${prod.id}}`;
+            //  console.log(sessionupdate.panier);
+            //  console.log(prod.id);
+        
+        }
+  
+        //   console.log(prod.toString(), sessionupdate.panier);
+
+        sessionupdate.changed('panier', true);
+  
+          sessionupdate.save();
+
+          for (prod of panierArray) {
+
+
+            const prequest = await Product.findByPk(parseInt(prod));
+
+            products.push(prequest.dataValues);
+
+            req.session.cart = products;
+
+            // console.log(req.session.cart );
+
+         }
+
+        
+                } else if((!req.session.cart)&&(session != undefined)){
+
+
+                    for (prod of panierArray) {
+
+
+                        const prequest = await Product.findByPk(parseInt(prod));
+            
+                        products.push(prequest.dataValues);
+            
+                        req.session.cart = products;
+            
+                        // console.log(req.session.cart );
+            
+                     }
+
+                }};
+
+ 
+            //  console.log(req.session.cart);
+
+
+            res.redirect('/cart');
+
         } catch (e) {
             console.error(e.message);
             res.status(500).send('Server Error');
@@ -74,8 +147,10 @@ const sessionController = {
 
         req.session.destroy();
 
-        products = [];
+        // console.log(req.session);
 
+        products = [];
+        
         res.redirect('/');
     },
 };
